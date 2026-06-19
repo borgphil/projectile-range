@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projectile Range Calculator</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <section class="hero is-primary is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">Projectile Range Calculator</h1>
+        <h2 class="subtitle">Compute the horizontal distance on a flat surface from launch speed and angle.</h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="box">
+        <div class="columns is-vcentered">
+          <div class="column is-half">
+            <div class="field">
+              <label class="label" for="velocity">Launch velocity (ft/s)</label>
+              <div class="control has-icons-left">
+                <input id="velocity" class="input" type="number" min="0" step="any" placeholder="e.g. 20" />
+                <span class="icon is-small is-left">
+                  <i class="fas fa-tachometer-alt"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="angle">Elevation angle (°)</label>
+              <div class="control has-icons-left">
+                <input id="angle" class="input" type="number" min="0" max="90" step="any" placeholder="e.g. 45" />
+                <span class="icon is-small is-left">
+                  <i class="fas fa-angle-up"></i>
+                </span>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <button id="calculateButton" class="button is-link is-fullwidth">Calculate Range</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="column is-half">
+            <div id="resultCard" class="notification is-light has-text-centered">
+              <p class="title is-5">Result</p>
+              <p id="resultText" class="subtitle is-4">Enter values and click Calculate.</p>
+            </div>
+            <div class="content">
+              <p><strong>Assumptions:</strong></p>
+              <ul>
+                <li>Horizontal landing surface</li>
+                <li>No air resistance</li>
+                <li>Gravity is 9.81 m/s²</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://kit.fontawesome.com/a2d6f9f4f8.js" crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+</body>
+</html>

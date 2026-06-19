@@ -1,0 +1,23 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: #f5f7fb;
+}
+
+.hero {
+  border-bottom: 4px solid #3273dc;
+}
+
+#resultCard {
+  min-height: 180px;
+}
+
+#resultText {
+  word-break: break-word;
+}
+
+.notification.is-light {
+  background-color: #ffffff;
+}
