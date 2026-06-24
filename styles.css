@@ -1,23 +1,10 @@
 :root {
-  color-scheme: light;
+--line-height: 1;
+--spacing: 0.2rem;
 }
 
-body {
-  background: #f5f7fb;
+h2{
+  --typography-spacing-vertical: 0.5rem;
 }
 
-.hero {
-  border-bottom: 4px solid #3273dc;
-}
 
-#resultCard {
-  min-height: 180px;
-}
-
-#resultText {
-  word-break: break-word;
-}
-
-.notification.is-light {
-  background-color: #ffffff;
-}
