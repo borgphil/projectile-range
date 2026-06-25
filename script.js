@@ -486,60 +486,110 @@ class TrajectoryResult {
   }
 }
 
+function setFieldValidity(fieldIds, invalid) {
+  fieldIds.forEach((fieldId) => {
+    const element = document.getElementById(fieldId);
+    if (element) {
+      element.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+    }
+  });
+}
+
 function displayValidationErrors(errors) {
-  const container = document.getElementById('validation-errors');
-  if (!container) {
-    return;
-  }
+  const fieldIds = [
+    'launch-elevation',
+    'launch-velocity',
+    'initial-height',
+    'arrow-weight',
+    'long-cda',
+    'lat-cda',
+    'wind-speed',
+    'wind-speed-height',
+    'wind-direction',
+    'hellman-constant',
+    'temperature',
+    'pressure',
+    'humidity'
+  ];
+
+  fieldIds.forEach((fieldId) => {
+    const input = document.getElementById(fieldId);
+    const helper = document.getElementById(`${fieldId}-helper`);
+    if (input) {
+      input.setAttribute('aria-invalid', 'false');
+    }
+    if (helper) {
+      helper.textContent = '';
+      helper.classList.remove('field-helper-error', 'field-helper-ok');
+    }
+  });
+
   if (!errors.length) {
-    container.innerHTML = '';
     return;
   }
 
-  container.innerHTML = `<p>Please fix the following input errors:</p><ul>${errors.map(error => `<li>${error}</li>`).join('')}</ul>`;
+  errors.forEach((error) => {
+    const input = document.getElementById(error.fieldId);
+    const helper = document.getElementById(`${error.fieldId}-helper`);
+
+    if (input) {
+      input.setAttribute('aria-invalid', 'true');
+    }
+    if (helper) {
+      helper.textContent = error.message;
+      helper.classList.remove('field-helper-ok');
+      helper.classList.add('field-helper-error');
+    }
+  });
 }
+
+function initializeFieldHelpers() {
+  displayValidationErrors([]);
+}
+
+window.addEventListener('DOMContentLoaded', initializeFieldHelpers);
 
 function validateInputs(inputs) {
   const errors = [];
 
   if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation > 45) {
-    errors.push('Launch angle must be between 0 and 45 degrees.');
+    errors.push({ fieldId: 'launch-elevation', message: 'Launch angle must be between 0 and 45 degrees.' });
   }
   if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0) {
-    errors.push('Launch velocity must be greater than 0.');
+    errors.push({ fieldId: 'launch-velocity', message: 'Launch velocity must be greater than 0.' });
   }
   if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight <= 0 || inputs.initialHeight >= 10) {
-    errors.push('Initial height must be greater than 0 and less than 10 meters.');
+    errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 10 meters.' });
   }
   if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight <= 0 || inputs.arrowWeight >= 1000) {
-    errors.push('Arrow weight must be greater than 0 and less than 1000 grains.');
+    errors.push({ fieldId: 'arrow-weight', message: 'Arrow weight must be greater than 0 and less than 1000 grains.' });
   }
   if (Number.isNaN(inputs.longCda) || inputs.longCda <= 0) {
-    errors.push('Longitudinal CdA must be greater than 0.');
+    errors.push({ fieldId: 'long-cda', message: 'Longitudinal CdA must be greater than 0.' });
   }
   if (Number.isNaN(inputs.latCda) || inputs.latCda <= 0) {
-    errors.push('Lateral CdA must be greater than 0.');
+    errors.push({ fieldId: 'lat-cda', message: 'Lateral CdA must be greater than 0.' });
   }
   if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed <= 0 || inputs.windSpeed >= 50) {
-    errors.push('Wind speed must be greater than 0 and less than 50 mph.');
+    errors.push({ fieldId: 'wind-speed', message: 'Wind speed must be greater than 0 and less than 50 mph.' });
   }
   if (Number.isNaN(inputs.windSpeedHeight) || inputs.windSpeedHeight <= 0 || inputs.windSpeedHeight >= 50) {
-    errors.push('Wind speed height must be greater than 0 and less than 50 meters.');
+    errors.push({ fieldId: 'wind-speed-height', message: 'Wind speed height must be greater than 0 and less than 50 meters.' });
   }
   if (Number.isNaN(inputs.windDirection) || inputs.windDirection < -180 || inputs.windDirection > 180) {
-    errors.push('Wind direction must be between -180 and 180 degrees.');
+    errors.push({ fieldId: 'wind-direction', message: 'Wind direction must be between -180 and 180 degrees.' });
   }
   if (Number.isNaN(inputs.hellmanConstant) || inputs.hellmanConstant < 0 || inputs.hellmanConstant > 0.7) {
-    errors.push('Hellman constant must be between 0 and 0.7.');
+    errors.push({ fieldId: 'hellman-constant', message: 'Hellman constant must be between 0 and 0.7.' });
   }
   if (Number.isNaN(inputs.temperatureC) || inputs.temperatureC <= -40 || inputs.temperatureC >= 50) {
-    errors.push('Temperature must be greater than -40°C and less than 50°C.');
+    errors.push({ fieldId: 'temperature', message: 'Temperature must be greater than -40°C and less than 50°C.' });
   }
   if (Number.isNaN(inputs.pressure) || inputs.pressure <= 80 || inputs.pressure >= 120) {
-    errors.push('Pressure must be greater than 80 kPa and less than 120 kPa.');
+    errors.push({ fieldId: 'pressure', message: 'Pressure must be greater than 80 kPa and less than 120 kPa.' });
   }
   if (Number.isNaN(inputs.humidity) || inputs.humidity < 0 || inputs.humidity > 100) {
-    errors.push('Humidity must be between 0% and 100%.');
+    errors.push({ fieldId: 'humidity', message: 'Humidity must be between 0% and 100%.' });
   }
 
   return errors;

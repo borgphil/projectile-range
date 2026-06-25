@@ -1,5 +1,5 @@
 :root {
---line-height: 1;
+--line-height: 1.1;
 --spacing: 0.2rem;
 }
 
@@ -9,27 +9,8 @@ h2{
 
 /* Make readonly inputs appear visually dimmed compared to editable inputs */
 input[readonly], textarea[readonly], select[disabled], input[disabled] {
-  border-color: #ea1616;
+  border-color: lightgray;
   cursor: default;
-}
-
-.validation-errors {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  border: 2px solid #e74c3c;
-  border-radius: 8px;
-  background: rgba(231, 76, 60, 0.08);
-  color: #b02a2a;
-}
-
-.validation-errors p {
-  margin: 0 0 0.5rem;
-  font-weight: 700;
-}
-
-.validation-errors ul {
-  margin: 0;
-  padding-left: 1.2rem;
 }
 
 

@@ -13,16 +13,18 @@
 <body>
   <main class="container">
     <form>
-      <div id="validation-errors" class="validation-errors" role="alert" aria-live="assertive"></div>
       <button type="button" onclick="calculateTrajectory()">Calculate</button>
       <fieldset>
         <h2>Launch</h2>
         <label for="launch-elevation">Launch Elevation (degrees)<input type="number" id="launch-elevation"
-            name="launchElevation" step="0.5" min="0" max="45" value="17.5"></label>
+            name="launchElevation" step="0.5" min="0" max="45" value="17.5" aria-describedby="launch-elevation-helper"></label>
+        <small id="launch-elevation-helper" class="field-helper" aria-live="polite"></small>
         <label for="launch-velocity">Launch Velocity (fps)<input type="number" id="launch-velocity"
-            name="launchVelocity" step="1" min="1" max="350" value="200"></label>
+            name="launchVelocity" step="1" min="1" max="350" value="200" aria-describedby="launch-velocity-helper"></label>
+        <small id="launch-velocity-helper" class="field-helper" aria-live="polite"></small>
         <label for="initial-height">Initial Height (m)<input type="number" id="initial-height" name="initialHeight"
-            step="0.01" min="0" max="10" value="1.2"></label>
+            step="0.01" min="0" max="10" value="1.2" aria-describedby="initial-height-helper"></label>
+        <small id="initial-height-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
         <h2>Results</h2>
@@ -40,31 +42,41 @@
       <fieldset>
         <h2>Arrow</h2>
         <label for="arrow-weight">Weight (grains)<input type="number" id="arrow-weight" name="arrowWeight" step="1"
-            min="1" max="1000" value="626"></label>
+            min="1" max="1000" value="626" aria-describedby="arrow-weight-helper"></label>
+        <small id="arrow-weight-helper" class="field-helper" aria-live="polite"></small>
         <label for="long-cda">Long. CdA<input type="number" id="long-cda" name="longCda" step="0.0001" min="0" max="0.1"
-            value="0.00025"></label>
+            value="0.00025" aria-describedby="long-cda-helper"></label>
+        <small id="long-cda-helper" class="field-helper" aria-live="polite"></small>
         <label for="lat-cda">Lat. CdA<input type="number" id="lat-cda" name="latCda" step="0.0001" min="0"
-            value="0.0025"></label>
+            value="0.0025" aria-describedby="lat-cda-helper"></label>
+        <small id="lat-cda-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
         <h2>Wind</h2>
         <label for="wind-speed">Wind Speed (mph)<input type="number" id="wind-speed" name="windSpeed" step="1" min="0"
-            max="30" value="10"></label>
+            max="30" value="10" aria-describedby="wind-speed-helper"></label>
+        <small id="wind-speed-helper" class="field-helper" aria-live="polite"></small>
         <label for="wind-speed-height">Wind Speed Height (m)<input type="number" id="wind-speed-height"
-            name="windSpeedHeight" step="1" min="1" max="50" value="10"></label>
+            name="windSpeedHeight" step="1" min="1" max="50" value="10" aria-describedby="wind-speed-height-helper"></label>
+        <small id="wind-speed-height-helper" class="field-helper" aria-live="polite"></small>
         <label for="wind-direction">Wind Direction (degrees)<input type="number" id="wind-direction"
-            name="windDirection" step="10" min="-180" max="180" value="45"></label>
+            name="windDirection" step="10" min="-180" max="180" value="45" aria-describedby="wind-direction-helper"></label>
+        <small id="wind-direction-helper" class="field-helper" aria-live="polite"></small>
         <label for="hellman-constant">Hellman Constant<input type="number" id="hellman-constant" name="hellmanConstant"
-            step="0.05" min="0" max="0.7" value="0.15"></label>
+            step="0.05" min="0" max="0.7" value="0.15" aria-describedby="hellman-constant-helper"></label>
+        <small id="hellman-constant-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
         <h2>Atmosphere</h2>
         <label for="temperature">Temperature (°C)<input type="number" id="temperature" name="temperature" step="1"
-            min="-40" max="50" value="20"></label>
+            min="-40" max="50" value="20" aria-describedby="temperature-helper"></label>
+        <small id="temperature-helper" class="field-helper" aria-live="polite"></small>
         <label for="pressure">Pressure (kPa)<input type="number" id="pressure" name="pressure" step="1" min="80"
-            max="120" value="101.325"></label>
+            max="120" value="101.325" aria-describedby="pressure-helper"></label>
+        <small id="pressure-helper" class="field-helper" aria-live="polite"></small>
         <label for="humidity">Humidity (%)<input type="number" id="humidity" name="humidity" step="1" min="0" max="100"
-            value="50"></label>
+            value="50" aria-describedby="humidity-helper"></label>
+        <small id="humidity-helper" class="field-helper" aria-live="polite"></small>
         <label for="air-density">Air Density (kg/m<sup>3</sup>)<input type="number" id="air-density" name="airDensity"
             step="0.005" min="1.0" max="1.3" readonly></label>
       </fieldset>
