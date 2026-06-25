@@ -7,4 +7,11 @@ h2{
   --typography-spacing-vertical: 0.5rem;
 }
 
+/* Make readonly inputs appear visually dimmed compared to editable inputs */
+input[readonly], textarea[readonly], select[disabled], input[disabled] {
+  border-color: #ea1616;
+  cursor: default;
+}
+
+
 
