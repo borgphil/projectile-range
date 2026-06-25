@@ -566,8 +566,82 @@ function displayValidationErrors(errors) {
   });
 }
 
+function overrideInputsFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const overrideMap = {
+    launchElevation: 'launch-elevation',
+    bowTurns: 'bow-turns',
+    launchVelocity: 'launch-velocity',
+    initialHeight: 'initial-height',
+    speed0Turns: 'speed-0-turns',
+    speed2Turns: 'speed-2-turns',
+    speed4Turns: 'speed-4-turns',
+    arrowWeight: 'arrow-weight',
+    longCda: 'long-cda',
+    latCda: 'lat-cda',
+    windSpeed: 'wind-speed',
+    windSpeedHeight: 'wind-speed-height',
+    windDirection: 'wind-direction',
+    hellmanConstant: 'hellman-constant',
+    temperature: 'temperature',
+    pressure: 'pressure',
+    humidity: 'humidity'
+  };
+
+  for (const [paramName, elementId] of Object.entries(overrideMap)) {
+    if (!params.has(paramName)) {
+      continue;
+    }
+
+    const input = document.getElementById(elementId);
+    if (!input) {
+      continue;
+    }
+
+    const paramValue = params.get(paramName);
+    if (paramValue === null) {
+      continue;
+    }
+
+    if (input.type === 'number') {
+      const numeric = parseFloat(paramValue);
+      if (Number.isNaN(numeric)) {
+        continue;
+      }
+      input.value = numeric;
+    } else {
+      input.value = paramValue;
+    }
+  }
+}
+
+function reloadWithQueryParams() {
+  const form = document.querySelector('form');
+  if (!form) {
+    return;
+  }
+
+  const params = new URLSearchParams();
+  Array.from(form.elements).forEach((element) => {
+    if (!(element instanceof HTMLInputElement)) {
+      return;
+    }
+    if (!element.name) {
+      return;
+    }
+    if (element.type === 'button' || element.type === 'submit' || element.type === 'reset') {
+      return;
+    }
+    params.set(element.name, element.value);
+  });
+
+  window.location.search = params.toString();
+}
+
 function initializeFieldHelpers() {
+  overrideInputsFromQuery();
   displayValidationErrors([]);
+  calculateTrajectory();
 }
 
 window.addEventListener('DOMContentLoaded', initializeFieldHelpers);

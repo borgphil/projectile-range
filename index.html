@@ -12,8 +12,7 @@
 
 <body>
   <main class="container">
-    <form>
-      <button type="button" onclick="calculateTrajectory()">Calculate</button>
+    <form onchange="reloadWithQueryParams()">
       <fieldset>
         <h2>Launch</h2>
         <label for="launch-elevation">Launch Elevation (degrees)<input type="number" id="launch-elevation"
