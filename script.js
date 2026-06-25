@@ -308,8 +308,6 @@ class TrajectoryCalculator {
 
     const gravitationalForce = new Vector3D(0, 0, Constants.GRAVITY * arrow.mass * -1);
     const relativeVelocity = velocity.subtract(wind.getWindVectorAtHeight(position.z));
-    // Debug: show relative velocity and height to diagnose force changes per iteration
-    console.log(`calculateNetForce z:${position.z.toFixed(3)} relVel:${relativeVelocity.toString()}`);
 
     let dragForceX = 0.0;
     let dragForceY = 0.0;
@@ -317,17 +315,14 @@ class TrajectoryCalculator {
 
     if (relativeVelocity.x !== 0) {
       dragForceX = -(0.5 * arrow.longDragArea * airDensity) * Math.abs(relativeVelocity.x) * relativeVelocity.x;
-      console.log(`dragX ${dragForceX.toFixed(4)}`);
     }
 
     if (relativeVelocity.y !== 0) {
       dragForceY = -(0.5 * arrow.latDragArea * airDensity) * Math.abs(relativeVelocity.y) * relativeVelocity.y;
-      console.log(`dragY ${dragForceY.toFixed(4)}`);
     }
 
     if (relativeVelocity.z !== 0) {
       dragForceZ = -(0.5 * arrow.latDragArea * airDensity) * Math.abs(relativeVelocity.z) * relativeVelocity.z;
-      console.log(`dragZ ${dragForceZ.toFixed(4)}`);
     }
 
     const dragForce = new Vector3D(dragForceX, dragForceY, dragForceZ);
@@ -416,7 +411,6 @@ class TrajectoryCalculator {
       currentVelocity = nextVelocity.clone();
       const currentTime = flightTime + timeStep;
       const netForce = TrajectoryCalculator.calculateNetForce(currentPosition, currentVelocity, arrow, wind, airDensity);
-      console.log(`time:${currentTime.toFixed(2)} position:${currentPosition.toString()} force:${netForce.toString()}`);
 
       if (currentPosition.z > maxZ) {
         maxZ = currentPosition.z;
@@ -764,26 +758,6 @@ function calculateTrajectory() {
   );
   const wind = new Wind(windSpeedMps, windSpeedHeight, windDirection, hellmanConstant);
   const arrow = new Arrow(arrowMass, longCda, latCda);
-
-  console.log('calculateTrajectory inputs:', {
-    launchElevation,
-    launchVelocity,
-    initialHeight,
-    arrowWeight,
-    arrowMass,
-    longCda,
-    latCda,
-    windSpeed,
-    windSpeedHeight,
-    windDirection,
-    hellmanConstant,
-    temperatureC,
-    pressure,
-    humidity,
-    airDensity: atmosphere.airDensity,
-    timeStep: 0.01,
-    maxSimulationTime: 10
-  });
 
   const result = TrajectoryCalculator.calculate(
     launchElevation,
