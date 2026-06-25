@@ -56,6 +56,14 @@ class Vector3D {
     const y = this.x * sin + this.y * cos;
     return new Vector3D(x, y, this.z);
   }
+
+  clone() {
+    return new Vector3D(this.x, this.y, this.z);
+  }
+
+  toString() {
+    return `x:${this.x.toFixed(2)} y:${this.y.toFixed(2)} z:${this.z.toFixed(2)}`;
+  }
 }
 
 class Constants {
@@ -210,6 +218,10 @@ class Wind {
   }
 
   getWindVectorAtHeight(height) {
+    if (height < 0) {
+      return new Vector3D(0, 0, 0);
+    }
+
     const referenceHeight = this.windSpeedHeight;
     const exponent = this.hellmanConstant;
     const speed = this.windSpeed * Math.pow(height / referenceHeight, exponent);
@@ -231,7 +243,7 @@ class Atmosphere {
   calculateAirDensity() {
     // Temperature in Kelvin as stored on the Atmosphere instance
     const T = this.temperature;
-    const p = this.pressure;
+    const p = this.pressure * 1000; // input pressure is kPa, convert to Pa
     let rh = this.humidity;
 
     // Convert relative humidity from percent to fraction if needed
@@ -267,38 +279,43 @@ class TrajectoryCalculator {
     // Placeholder for future trajectory-specific options
   }
 
-  static calculateNetForce(position, velocity, arrow, wind, atmosphere) {
+  static calculateNetForce(position, velocity, arrow, wind, airDensity) {
     // position: Vector3D for arrow coordinates
     // velocity: Vector3D for arrow velocity
     // arrow: Arrow instance with mass and drag areas
     // wind: Wind instance describing current wind behavior
-    // atmosphere: Atmosphere instance describing current environmental conditions
+    // airDensity: local air density in kg/m^3
 
     const gravitationalForce = new Vector3D(0, 0, Constants.GRAVITY * arrow.mass * -1);
     const relativeVelocity = velocity.subtract(wind.getWindVectorAtHeight(position.z));
+    // Debug: show relative velocity and height to diagnose force changes per iteration
+    console.log(`calculateNetForce z:${position.z.toFixed(3)} relVel:${relativeVelocity.toString()}`);
 
     let dragForceX = 0.0;
     let dragForceY = 0.0;
     let dragForceZ = 0.0;
 
     if (relativeVelocity.x !== 0) {
-      dragForceX = -(0.5 * arrow.longDragArea * atmosphere.airDensity) * Math.abs(relativeVelocity.x) * relativeVelocity.x;
+      dragForceX = -(0.5 * arrow.longDragArea * airDensity) * Math.abs(relativeVelocity.x) * relativeVelocity.x;
+      console.log(`dragX ${dragForceX.toFixed(4)}`);
     }
 
     if (relativeVelocity.y !== 0) {
-      dragForceY = -(0.5 * arrow.latDragArea * atmosphere.airDensity) * Math.abs(relativeVelocity.y) * relativeVelocity.y;
+      dragForceY = -(0.5 * arrow.latDragArea * airDensity) * Math.abs(relativeVelocity.y) * relativeVelocity.y;
+      console.log(`dragY ${dragForceY.toFixed(4)}`);
     }
 
     if (relativeVelocity.z !== 0) {
-      dragForceZ = -(0.5 * arrow.latDragArea * atmosphere.airDensity) * Math.abs(relativeVelocity.z) * relativeVelocity.z;
+      dragForceZ = -(0.5 * arrow.latDragArea * airDensity) * Math.abs(relativeVelocity.z) * relativeVelocity.z;
+      console.log(`dragZ ${dragForceZ.toFixed(4)}`);
     }
 
     const dragForce = new Vector3D(dragForceX, dragForceY, dragForceZ);
     return gravitationalForce.add(dragForce);
   }
 
-  static calculateAcceleration(position, velocity, arrow, wind, atmosphere) {
-    const netForce = TrajectoryCalculator.calculateNetForce(position, velocity, arrow, wind, atmosphere);
+  static calculateAcceleration(position, velocity, arrow, wind, airDensity) {
+    const netForce = TrajectoryCalculator.calculateNetForce(position, velocity, arrow, wind, airDensity);
     return new Vector3D(netForce.x / arrow.mass, netForce.y / arrow.mass, netForce.z / arrow.mass);
   }
 
@@ -313,8 +330,8 @@ class TrajectoryCalculator {
     return { position, velocity };
   }
 
-  static integrateRK4(position, velocity, arrow, wind, atmosphere, timeStep) {
-    const k1v = TrajectoryCalculator.calculateAcceleration(position, velocity, arrow, wind, atmosphere).multiplyByScalar(timeStep);
+  static integrateRK4(position, velocity, arrow, wind, airDensity, timeStep) {
+    const k1v = TrajectoryCalculator.calculateAcceleration(position, velocity, arrow, wind, airDensity).multiplyByScalar(timeStep);
     const k1p = velocity.multiplyByScalar(timeStep);
 
     const k2v = TrajectoryCalculator.calculateAcceleration(
@@ -322,7 +339,7 @@ class TrajectoryCalculator {
       velocity.add(k1v.multiplyByScalar(0.5)),
       arrow,
       wind,
-      atmosphere
+      airDensity
     ).multiplyByScalar(timeStep);
     const k2p = velocity.add(k1v.multiplyByScalar(0.5)).multiplyByScalar(timeStep);
 
@@ -331,7 +348,7 @@ class TrajectoryCalculator {
       velocity.add(k2v.multiplyByScalar(0.5)),
       arrow,
       wind,
-      atmosphere
+      airDensity
     ).multiplyByScalar(timeStep);
     const k3p = velocity.add(k2v.multiplyByScalar(0.5)).multiplyByScalar(timeStep);
 
@@ -340,7 +357,7 @@ class TrajectoryCalculator {
       velocity.add(k3v),
       arrow,
       wind,
-      atmosphere
+      airDensity
     ).multiplyByScalar(timeStep);
     const k4p = velocity.add(k3v).multiplyByScalar(timeStep);
 
@@ -354,29 +371,32 @@ class TrajectoryCalculator {
     return { nextPosition, nextVelocity };
   }
 
-  static simulateTrajectory(position, velocity, arrow, wind, atmosphere, timeStep, maxSimulationTime) {
-    let currentPosition = position;
-    let currentVelocity = velocity;
-    let previousPosition = currentPosition;
-    let previousVelocity = currentVelocity;
+  static simulateTrajectory(position, velocity, arrow, wind, airDensity, timeStep, maxSimulationTime) {
+    let currentPosition = position.clone();
+    let currentVelocity = velocity.clone();
+    let previousPosition = currentPosition.clone();
+    let previousVelocity = currentVelocity.clone();
     let flightTime = 0;
     let maxZ = currentPosition.z;
 
     while (currentPosition.z >= 0) {
-      previousPosition = currentPosition;
-      previousVelocity = currentVelocity;
+      previousPosition = currentPosition.clone();
+      previousVelocity = currentVelocity.clone();
 
       const { nextPosition, nextVelocity } = TrajectoryCalculator.integrateRK4(
         currentPosition,
         currentVelocity,
         arrow,
         wind,
-        atmosphere,
+        airDensity,
         timeStep
       );
 
-      currentPosition = nextPosition;
-      currentVelocity = nextVelocity;
+      currentPosition = nextPosition.clone();
+      currentVelocity = nextVelocity.clone();
+      const currentTime = flightTime + timeStep;
+      const netForce = TrajectoryCalculator.calculateNetForce(currentPosition, currentVelocity, arrow, wind, airDensity);
+      console.log(`time:${currentTime.toFixed(2)} position:${currentPosition.toString()} force:${netForce.toString()}`);
 
       if (currentPosition.z > maxZ) {
         maxZ = currentPosition.z;
@@ -415,7 +435,7 @@ class TrajectoryCalculator {
     return Math.atan2(velocity.z, velocity.x) * (180 / Math.PI);
   }
 
-  static calculate(launchElevation, launchVelocity, initialHeight, arrow, wind, atmosphere, timeStep, maxSimulationTime) {
+  static calculate(launchElevation, launchVelocity, initialHeight, arrow, wind, airDensity, timeStep, maxSimulationTime) {
     const { position, velocity } = TrajectoryCalculator.initializeLaunchState(
       launchElevation,
       launchVelocity,
@@ -434,7 +454,7 @@ class TrajectoryCalculator {
       velocity,
       arrow,
       wind,
-      atmosphere,
+      airDensity,
       timeStep,
       maxSimulationTime
     );
@@ -456,13 +476,83 @@ class TrajectoryCalculator {
 }
 
 class TrajectoryResult {
-  constructor(impactX, impactY, impactZ, impactAngle,maxZ, totalFlightTime) {
+  constructor(impactX, impactY, impactZ, impactAngle, maxZ, totalFlightTime) {
     this.impactX = impactX;
     this.impactY = impactY;
     this.impactZ = impactZ;
     this.impactAngle = impactAngle;
     this.maxZ = maxZ;
-    this.totalFlightTime = totalFlightTime;  
+    this.totalFlightTime = totalFlightTime;
   }
+}
+
+function calculateTrajectory() {
+  const launchElevation = parseFloat(document.getElementById('launch-elevation').value);
+  const launchVelocity = parseFloat(document.getElementById('launch-velocity').value);
+  const launchVelocityMps = UnitConverter.convertSpeed(launchVelocity, 'ft/s', 'm/s');
+  const initialHeight = parseFloat(document.getElementById('initial-height').value);
+  const arrowWeight = parseFloat(document.getElementById('arrow-weight').value);
+  const longCda = parseFloat(document.getElementById('long-cda').value);
+  const latCda = parseFloat(document.getElementById('lat-cda').value);
+  const windSpeed = parseFloat(document.getElementById('wind-speed').value);
+  const windSpeedHeight = parseFloat(document.getElementById('wind-speed-height').value);
+  const windDirection = parseFloat(document.getElementById('wind-direction').value);
+  const hellmanConstant = parseFloat(document.getElementById('hellman-constant').value);
+  const temperatureC = parseFloat(document.getElementById('temperature').value);
+  const pressure = parseFloat(document.getElementById('pressure').value);
+  const humidity = parseFloat(document.getElementById('humidity').value);
+  const windSpeedMps = UnitConverter.convertSpeed(windSpeed, 'mph', 'm/s');
+
+  const arrowMass = UnitConverter.convertMass(arrowWeight, 'grains', 'kg');
+  const atmosphere = new Atmosphere(
+    UnitConverter.convertTemperature(temperatureC, 'celsius', 'kelvin'),
+    pressure,
+    humidity
+  );
+  const wind = new Wind(windSpeedMps, windSpeedHeight, windDirection, hellmanConstant);
+  const arrow = new Arrow(arrowMass, longCda, latCda);
+
+  console.log('calculateTrajectory inputs:', {
+    launchElevation,
+    launchVelocity,
+    initialHeight,
+    arrowWeight,
+    arrowMass,
+    longCda,
+    latCda,
+    windSpeed,
+    windSpeedHeight,
+    windDirection,
+    hellmanConstant,
+    temperatureC,
+    pressure,
+    humidity,
+    airDensity: atmosphere.airDensity,
+    timeStep: 0.01,
+    maxSimulationTime: 10
+  });
+
+  const result = TrajectoryCalculator.calculate(
+    launchElevation,
+    launchVelocityMps,
+    initialHeight,
+    arrow,
+    wind,
+    atmosphere.airDensity,
+    0.01,
+    10
+  );
+
+  if (!result || Number.isNaN(result.impactX) || Number.isNaN(result.impactY) || Number.isNaN(result.maxZ) || Number.isNaN(result.totalFlightTime)) {
+    console.error('Trajectory calculation returned invalid results', result);
+    return;
+  }
+
+  document.getElementById('impact-distance-m').value = result.impactX.toFixed(2);
+  document.getElementById('impact-distance-yd').value = UnitConverter.convertLength(result.impactX, 'm', 'yd').toFixed(2);
+  document.getElementById('max-height').value = result.maxZ.toFixed(2);
+  document.getElementById('flight-time').value = result.totalFlightTime.toFixed(2);
+  document.getElementById('lateral-drift').value = result.impactY.toFixed(2);
+  document.getElementById('air-density').value = atmosphere.airDensity.toFixed(3);
 }
 
