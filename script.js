@@ -486,6 +486,65 @@ class TrajectoryResult {
   }
 }
 
+function displayValidationErrors(errors) {
+  const container = document.getElementById('validation-errors');
+  if (!container) {
+    return;
+  }
+  if (!errors.length) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = `<p>Please fix the following input errors:</p><ul>${errors.map(error => `<li>${error}</li>`).join('')}</ul>`;
+}
+
+function validateInputs(inputs) {
+  const errors = [];
+
+  if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation > 45) {
+    errors.push('Launch angle must be between 0 and 45 degrees.');
+  }
+  if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0) {
+    errors.push('Launch velocity must be greater than 0.');
+  }
+  if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight <= 0 || inputs.initialHeight >= 10) {
+    errors.push('Initial height must be greater than 0 and less than 10 meters.');
+  }
+  if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight <= 0 || inputs.arrowWeight >= 1000) {
+    errors.push('Arrow weight must be greater than 0 and less than 1000 grains.');
+  }
+  if (Number.isNaN(inputs.longCda) || inputs.longCda <= 0) {
+    errors.push('Longitudinal CdA must be greater than 0.');
+  }
+  if (Number.isNaN(inputs.latCda) || inputs.latCda <= 0) {
+    errors.push('Lateral CdA must be greater than 0.');
+  }
+  if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed <= 0 || inputs.windSpeed >= 50) {
+    errors.push('Wind speed must be greater than 0 and less than 50 mph.');
+  }
+  if (Number.isNaN(inputs.windSpeedHeight) || inputs.windSpeedHeight <= 0 || inputs.windSpeedHeight >= 50) {
+    errors.push('Wind speed height must be greater than 0 and less than 50 meters.');
+  }
+  if (Number.isNaN(inputs.windDirection) || inputs.windDirection < -180 || inputs.windDirection > 180) {
+    errors.push('Wind direction must be between -180 and 180 degrees.');
+  }
+  if (Number.isNaN(inputs.hellmanConstant) || inputs.hellmanConstant < 0 || inputs.hellmanConstant > 0.7) {
+    errors.push('Hellman constant must be between 0 and 0.7.');
+  }
+  if (Number.isNaN(inputs.temperatureC) || inputs.temperatureC <= -40 || inputs.temperatureC >= 50) {
+    errors.push('Temperature must be greater than -40°C and less than 50°C.');
+  }
+  if (Number.isNaN(inputs.pressure) || inputs.pressure <= 80 || inputs.pressure >= 120) {
+    errors.push('Pressure must be greater than 80 kPa and less than 120 kPa.');
+  }
+  if (Number.isNaN(inputs.humidity) || inputs.humidity < 0 || inputs.humidity > 100) {
+    errors.push('Humidity must be between 0% and 100%.');
+  }
+
+  return errors;
+}
+
 function calculateTrajectory() {
   const launchElevation = parseFloat(document.getElementById('launch-elevation').value);
   const launchVelocity = parseFloat(document.getElementById('launch-velocity').value);
@@ -502,6 +561,30 @@ function calculateTrajectory() {
   const pressure = parseFloat(document.getElementById('pressure').value);
   const humidity = parseFloat(document.getElementById('humidity').value);
   const windSpeedMps = UnitConverter.convertSpeed(windSpeed, 'mph', 'm/s');
+
+  const inputs = {
+    launchElevation,
+    launchVelocity,
+    initialHeight,
+    arrowWeight,
+    longCda,
+    latCda,
+    windSpeed,
+    windSpeedHeight,
+    windDirection,
+    hellmanConstant,
+    temperatureC,
+    pressure,
+    humidity
+  };
+
+  const errors = validateInputs(inputs);
+  if (errors.length) {
+    displayValidationErrors(errors);
+    return;
+  }
+
+  displayValidationErrors([]);
 
   const arrowMass = UnitConverter.convertMass(arrowWeight, 'grains', 'kg');
   const atmosphere = new Atmosphere(
