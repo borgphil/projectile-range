@@ -17,13 +17,14 @@
       <fieldset>
         <h2>Launch</h2>
         <label for="launch-elevation">Launch Elevation (degrees)<input type="number" id="launch-elevation"
-            name="launchElevation" step="0.5" min="0" max="45" value="17.5" aria-describedby="launch-elevation-helper"></label>
+            name="launchElevation" step="0.5" min="0" max="45" value="18" aria-describedby="launch-elevation-helper"></label>
         <small id="launch-elevation-helper" class="field-helper" aria-live="polite"></small>
+        <label for="bow-turns">Bow Turns<input type="number" id="bow-turns" name="bowTurns" step="1" min="0" max="8" value="3" aria-describedby="bow-turns-helper"></label>
+        <small id="bow-turns-helper" class="field-helper" aria-live="polite"></small>
         <label for="launch-velocity">Launch Velocity (fps)<input type="number" id="launch-velocity"
-            name="launchVelocity" step="1" min="1" max="350" value="200" aria-describedby="launch-velocity-helper"></label>
-        <small id="launch-velocity-helper" class="field-helper" aria-live="polite"></small>
+            name="launchVelocity" value="" readonly></label>
         <label for="initial-height">Initial Height (m)<input type="number" id="initial-height" name="initialHeight"
-            step="0.01" min="0" max="10" value="1.2" aria-describedby="initial-height-helper"></label>
+            step="0.01" min="0" max="10" value="1.4" aria-describedby="initial-height-helper"></label>
         <small id="initial-height-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
@@ -40,15 +41,27 @@
             step="0.01" readonly></label>
       </fieldset>
       <fieldset>
+        <h2>Bow Speeds</h2>
+        <label for="speed-0-turns">Speed @0 Turns (fps)<input type="number" id="speed-0-turns" name="speed0Turns" step="1"
+            min="1" max="1000" value="200" aria-describedby="speed-0-turns-helper"></label>
+        <small id="speed-0-turns-helper" class="field-helper" aria-live="polite"></small>
+        <label for="speed-2-turns">Speed @2 Turns (fps)<input type="number" id="speed-2-turns" name="speed2Turns" step="1"
+            min="1" max="1000" value="192" aria-describedby="speed-2-turns-helper"></label>
+        <small id="speed-2-turns-helper" class="field-helper" aria-live="polite"></small>
+        <label for="speed-4-turns">Speed @4 Turns (fps)<input type="number" id="speed-4-turns" name="speed4Turns" step="1"
+            min="1" max="1000" value="180" aria-describedby="speed-4-turns-helper"></label>
+        <small id="speed-4-turns-helper" class="field-helper" aria-live="polite"></small>
+      </fieldset>
+      <fieldset>
         <h2>Arrow</h2>
         <label for="arrow-weight">Weight (grains)<input type="number" id="arrow-weight" name="arrowWeight" step="1"
             min="1" max="1000" value="626" aria-describedby="arrow-weight-helper"></label>
         <small id="arrow-weight-helper" class="field-helper" aria-live="polite"></small>
         <label for="long-cda">Long. CdA<input type="number" id="long-cda" name="longCda" step="0.0001" min="0" max="0.1"
-            value="0.00025" aria-describedby="long-cda-helper"></label>
+            value="0.00008" aria-describedby="long-cda-helper"></label>
         <small id="long-cda-helper" class="field-helper" aria-live="polite"></small>
         <label for="lat-cda">Lat. CdA<input type="number" id="lat-cda" name="latCda" step="0.0001" min="0"
-            value="0.0025" aria-describedby="lat-cda-helper"></label>
+            value="0.001" aria-describedby="lat-cda-helper"></label>
         <small id="lat-cda-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
@@ -60,7 +73,7 @@
             name="windSpeedHeight" step="1" min="1" max="50" value="10" aria-describedby="wind-speed-height-helper"></label>
         <small id="wind-speed-height-helper" class="field-helper" aria-live="polite"></small>
         <label for="wind-direction">Wind Direction (degrees)<input type="number" id="wind-direction"
-            name="windDirection" step="10" min="-180" max="180" value="45" aria-describedby="wind-direction-helper"></label>
+            name="windDirection" step="10" min="-180" max="180" value="90" aria-describedby="wind-direction-helper"></label>
         <small id="wind-direction-helper" class="field-helper" aria-live="polite"></small>
         <label for="hellman-constant">Hellman Constant<input type="number" id="hellman-constant" name="hellmanConstant"
             step="0.05" min="0" max="0.7" value="0.15" aria-describedby="hellman-constant-helper"></label>

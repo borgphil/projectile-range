@@ -274,6 +274,26 @@ class Arrow {
   }
 }
 
+class BowSpeeds {
+  constructor(speed0Turns, speed2Turns, speed4Turns) {
+    this.speed0Turns = speed0Turns;
+    this.speed2Turns = speed2Turns;
+    this.speed4Turns = speed4Turns;
+  }
+
+  calculateSpeedFps(noTurns) {
+    const y0 = this.speed0Turns;
+    const y2 = this.speed2Turns;
+    const y4 = this.speed4Turns;
+
+    const c = y0;
+    const a = (y4 - 2 * y2 + y0) / 8;
+    const b = (y2 - y0 - 4 * a) / 2;
+
+    return a * noTurns * noTurns + b * noTurns + c;
+  }
+}
+
 class TrajectoryCalculator {
   constructor() {
     // Placeholder for future trajectory-specific options
@@ -498,8 +518,11 @@ function setFieldValidity(fieldIds, invalid) {
 function displayValidationErrors(errors) {
   const fieldIds = [
     'launch-elevation',
-    'launch-velocity',
+    'bow-turns',
     'initial-height',
+    'speed-0-turns',
+    'speed-2-turns',
+    'speed-4-turns',
     'arrow-weight',
     'long-cda',
     'lat-cda',
@@ -555,11 +578,20 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation > 45) {
     errors.push({ fieldId: 'launch-elevation', message: 'Launch angle must be between 0 and 45 degrees.' });
   }
-  if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0) {
-    errors.push({ fieldId: 'launch-velocity', message: 'Launch velocity must be greater than 0.' });
+  if (Number.isNaN(inputs.bowTurns) || inputs.bowTurns < 0 || inputs.bowTurns > 8) {
+    errors.push({ fieldId: 'bow-turns', message: 'Bow turns must be between 0 and 8.' });
   }
   if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight <= 0 || inputs.initialHeight >= 10) {
     errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 10 meters.' });
+  }
+  if (Number.isNaN(inputs.speed0Turns) || inputs.speed0Turns <= 0) {
+    errors.push({ fieldId: 'speed-0-turns', message: 'Speed @0 Turns must be greater than 0.' });
+  }
+  if (Number.isNaN(inputs.speed2Turns) || inputs.speed2Turns <= 0) {
+    errors.push({ fieldId: 'speed-2-turns', message: 'Speed @2 Turns must be greater than 0.' });
+  }
+  if (Number.isNaN(inputs.speed4Turns) || inputs.speed4Turns <= 0) {
+    errors.push({ fieldId: 'speed-4-turns', message: 'Speed @4 Turns must be greater than 0.' });
   }
   if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight <= 0 || inputs.arrowWeight >= 1000) {
     errors.push({ fieldId: 'arrow-weight', message: 'Arrow weight must be greater than 0 and less than 1000 grains.' });
@@ -570,8 +602,8 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.latCda) || inputs.latCda <= 0) {
     errors.push({ fieldId: 'lat-cda', message: 'Lateral CdA must be greater than 0.' });
   }
-  if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed <= 0 || inputs.windSpeed >= 50) {
-    errors.push({ fieldId: 'wind-speed', message: 'Wind speed must be greater than 0 and less than 50 mph.' });
+  if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed < 0 || inputs.windSpeed >= 50) {
+    errors.push({ fieldId: 'wind-speed', message: 'Wind speed must be greater than or equal to 0 and less than 50 mph.' });
   }
   if (Number.isNaN(inputs.windSpeedHeight) || inputs.windSpeedHeight <= 0 || inputs.windSpeedHeight >= 50) {
     errors.push({ fieldId: 'wind-speed-height', message: 'Wind speed height must be greater than 0 and less than 50 meters.' });
@@ -597,9 +629,11 @@ function validateInputs(inputs) {
 
 function calculateTrajectory() {
   const launchElevation = parseFloat(document.getElementById('launch-elevation').value);
-  const launchVelocity = parseFloat(document.getElementById('launch-velocity').value);
-  const launchVelocityMps = UnitConverter.convertSpeed(launchVelocity, 'ft/s', 'm/s');
+  const bowTurns = parseFloat(document.getElementById('bow-turns').value);
   const initialHeight = parseFloat(document.getElementById('initial-height').value);
+  const speed0Turns = parseFloat(document.getElementById('speed-0-turns').value);
+  const speed2Turns = parseFloat(document.getElementById('speed-2-turns').value);
+  const speed4Turns = parseFloat(document.getElementById('speed-4-turns').value);
   const arrowWeight = parseFloat(document.getElementById('arrow-weight').value);
   const longCda = parseFloat(document.getElementById('long-cda').value);
   const latCda = parseFloat(document.getElementById('lat-cda').value);
@@ -610,12 +644,24 @@ function calculateTrajectory() {
   const temperatureC = parseFloat(document.getElementById('temperature').value);
   const pressure = parseFloat(document.getElementById('pressure').value);
   const humidity = parseFloat(document.getElementById('humidity').value);
+
+  const bowSpeeds = new BowSpeeds(speed0Turns, speed2Turns, speed4Turns);
+  const launchVelocity = bowSpeeds.calculateSpeedFps(bowTurns);
+  const launchVelocityMps = UnitConverter.convertSpeed(launchVelocity, 'ft/s', 'm/s');
+  const launchVelocityInput = document.getElementById('launch-velocity');
+  if (launchVelocityInput) {
+    launchVelocityInput.value = launchVelocity.toFixed(0);
+  }
   const windSpeedMps = UnitConverter.convertSpeed(windSpeed, 'mph', 'm/s');
 
   const inputs = {
     launchElevation,
     launchVelocity,
+    bowTurns,
     initialHeight,
+    speed0Turns,
+    speed2Turns,
+    speed4Turns,
     arrowWeight,
     longCda,
     latCda,
