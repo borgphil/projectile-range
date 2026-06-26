@@ -11,8 +11,8 @@
 </head>
 
 <body>
-  <main class="container">
-    <form onchange="reloadWithQueryParams()">
+  <main class="container-fluid">
+    <form onchange="reloadWithQueryParams()" class="grid">
       <fieldset>
         <h2>Launch</h2>
         <label for="launch-elevation">Launch Elevation (degrees)<input type="number" id="launch-elevation"
@@ -25,6 +25,9 @@
         <label for="initial-height">Initial Height (m)<input type="number" id="initial-height" name="initialHeight"
             step="0.01" min="0" max="10" value="1.4" aria-describedby="initial-height-helper"></label>
         <small id="initial-height-helper" class="field-helper" aria-live="polite"></small>
+        <label for="slope-percent">Slope %<input type="number" id="slope-percent" name="slopePercent"
+            step="0.05" min="-10" max="10" value="0" aria-describedby="slope-percent-helper"></label>
+        <small id="slope-percent-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
         <h2>Results</h2>

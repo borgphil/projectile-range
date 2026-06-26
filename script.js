@@ -386,7 +386,11 @@ class TrajectoryCalculator {
     return { nextPosition, nextVelocity };
   }
 
-  static simulateTrajectory(position, velocity, arrow, wind, airDensity, timeStep, maxSimulationTime) {
+  static calculateGroundHeight(slopePercent, x) {
+    return x * slopePercent / 100;
+  }
+
+  static simulateTrajectory(position, velocity, slopePercent, arrow, wind, airDensity, timeStep, maxSimulationTime) {
     let currentPosition = position.clone();
     let currentVelocity = velocity.clone();
     let previousPosition = currentPosition.clone();
@@ -394,7 +398,7 @@ class TrajectoryCalculator {
     let flightTime = 0;
     let maxZ = currentPosition.z;
 
-    while (currentPosition.z >= 0) {
+    while (currentPosition.z >= TrajectoryCalculator.calculateGroundHeight(slopePercent, currentPosition.x)) {
       previousPosition = currentPosition.clone();
       previousVelocity = currentVelocity.clone();
 
@@ -425,23 +429,24 @@ class TrajectoryCalculator {
     return { previousPosition, currentPosition, previousVelocity, currentVelocity, maxZ, flightTime };
   }
 
-  static interpolateImpact(previousPosition, currentPosition, previousVelocity, currentVelocity, timeStep, flightTime) {
-    // t: fraction along the last time step where z crosses zero
-    const denom = (currentPosition.z - previousPosition.z) || 1e-12;
-    const t = (0 - previousPosition.z) / denom;
+  static interpolateImpact(slopePercent, previousPosition, currentPosition, previousVelocity, currentVelocity, timeStep, flightTime) {
+    // f: fraction along the last time step where z crosses ground slope
+    const f = (previousPosition.z - TrajectoryCalculator.calculateGroundHeight(slopePercent, previousPosition.x )) /
+              ((previousPosition.z - TrajectoryCalculator.calculateGroundHeight(slopePercent, previousPosition.x)) -
+               (currentPosition.z - TrajectoryCalculator.calculateGroundHeight(slopePercent, currentPosition.x)));
 
     // Linear interpolation for impact position
-    const impactX = previousPosition.x + t * (currentPosition.x - previousPosition.x);
-    const impactY = previousPosition.y + t * (currentPosition.y - previousPosition.y);
+    const impactX = previousPosition.x + f * (currentPosition.x - previousPosition.x);
+    const impactY = previousPosition.y + f * (currentPosition.y - previousPosition.y);
     const impactPosition = new Vector3D(impactX, impactY, 0);
 
     // Linear interpolation for impact velocity
-    const impactVx = previousVelocity.x + t * (currentVelocity.x - previousVelocity.x);
-    const impactVy = previousVelocity.y + t * (currentVelocity.y - previousVelocity.y);
-    const impactVz = previousVelocity.z + t * (currentVelocity.z - previousVelocity.z);
+    const impactVx = previousVelocity.x + f * (currentVelocity.x - previousVelocity.x);
+    const impactVy = previousVelocity.y + f * (currentVelocity.y - previousVelocity.y);
+    const impactVz = previousVelocity.z + f * (currentVelocity.z - previousVelocity.z);
     const impactVelocity = new Vector3D(impactVx, impactVy, impactVz);
 
-    const totalFlightTime = flightTime - timeStep + t * timeStep;
+    const totalFlightTime = flightTime - timeStep + f * timeStep;
     return { impactPosition, impactVelocity, totalFlightTime };
   }
 
@@ -449,7 +454,7 @@ class TrajectoryCalculator {
     return Math.atan2(velocity.z, velocity.x) * (180 / Math.PI);
   }
 
-  static calculate(launchElevation, launchVelocity, initialHeight, arrow, wind, airDensity, timeStep, maxSimulationTime) {
+  static calculate(launchElevation, launchVelocity, initialHeight, slopePercent, arrow, wind, airDensity, timeStep, maxSimulationTime) {
     const { position, velocity } = TrajectoryCalculator.initializeLaunchState(
       launchElevation,
       launchVelocity,
@@ -466,6 +471,7 @@ class TrajectoryCalculator {
     } = TrajectoryCalculator.simulateTrajectory(
       position,
       velocity,
+      slopePercent,
       arrow,
       wind,
       airDensity,
@@ -473,7 +479,7 @@ class TrajectoryCalculator {
       maxSimulationTime
     );
 
-    const { impactPosition, impactVelocity, totalFlightTime } = TrajectoryCalculator.interpolateImpact(
+    const { impactPosition, impactVelocity, totalFlightTime } = TrajectoryCalculator.interpolateImpact(slopePercent,
       previousPosition,
       currentPosition,
       previousVelocity,
@@ -514,6 +520,7 @@ function displayValidationErrors(errors) {
     'launch-elevation',
     'bow-turns',
     'initial-height',
+    'slope-percent',
     'speed-0-turns',
     'speed-2-turns',
     'speed-4-turns',
@@ -567,6 +574,7 @@ function overrideInputsFromQuery() {
     bowTurns: 'bow-turns',
     launchVelocity: 'launch-velocity',
     initialHeight: 'initial-height',
+    slopePercent: 'slope-percent',
     speed0Turns: 'speed-0-turns',
     speed2Turns: 'speed-2-turns',
     speed4Turns: 'speed-4-turns',
@@ -652,6 +660,9 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight <= 0 || inputs.initialHeight >= 10) {
     errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 10 meters.' });
   }
+  if (Number.isNaN(inputs.slopePercent) || inputs.slopePercent < -10 || inputs.slopePercent > 10) {
+    errors.push({ fieldId: 'slope-percent', message: 'Slope must be between -10 and 10 percent.' });
+  }
   if (Number.isNaN(inputs.speed0Turns) || inputs.speed0Turns <= 0) {
     errors.push({ fieldId: 'speed-0-turns', message: 'Speed @0 Turns must be greater than 0.' });
   }
@@ -699,6 +710,7 @@ function calculateTrajectory() {
   const launchElevation = parseFloat(document.getElementById('launch-elevation').value);
   const bowTurns = parseFloat(document.getElementById('bow-turns').value);
   const initialHeight = parseFloat(document.getElementById('initial-height').value);
+  const slopePercent = parseFloat(document.getElementById('slope-percent').value);
   const speed0Turns = parseFloat(document.getElementById('speed-0-turns').value);
   const speed2Turns = parseFloat(document.getElementById('speed-2-turns').value);
   const speed4Turns = parseFloat(document.getElementById('speed-4-turns').value);
@@ -727,6 +739,7 @@ function calculateTrajectory() {
     launchVelocity,
     bowTurns,
     initialHeight,
+    slopePercent,
     speed0Turns,
     speed2Turns,
     speed4Turns,
@@ -763,6 +776,7 @@ function calculateTrajectory() {
     launchElevation,
     launchVelocityMps,
     initialHeight,
+    slopePercent,
     arrow,
     wind,
     atmosphere.airDensity,
