@@ -649,10 +649,10 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight <= 0 || inputs.arrowWeight >= 1000) {
     errors.push({ fieldId: 'arrow-weight', message: 'Arrow weight must be greater than 0 and less than 1000 grains.' });
   }
-  if (Number.isNaN(inputs.longCda) || inputs.longCda <= 0) {
+  if (Number.isNaN(inputs.longCda) || inputs.longCda < 0) {
     errors.push({ fieldId: 'long-cda', message: 'Longitudinal CdA must be greater than 0.' });
   }
-  if (Number.isNaN(inputs.latCda) || inputs.latCda <= 0) {
+  if (Number.isNaN(inputs.latCda) || inputs.latCda < 0) {
     errors.push({ fieldId: 'lat-cda', message: 'Lateral CdA must be greater than 0.' });
   }
   if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed < 0 || inputs.windSpeed >= 50) {
