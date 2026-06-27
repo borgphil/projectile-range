@@ -614,7 +614,7 @@ function reloadWithQueryParams() {
     if (element.type === 'button' || element.type === 'submit' || element.type === 'reset') {
       return;
     }
-    if (element.readonly) {
+    if (element.readOnly) {
       return;
     }
     params.set(element.name, element.value);
@@ -686,8 +686,8 @@ function calculateTrajectory() {
   const initialHeight = parseFloat(document.getElementById('initial-height').value);
   const slopePercent = parseFloat(document.getElementById('slope-percent').value);
   const arrowWeight = parseFloat(document.getElementById('arrow-weight').value);
-  const longCda = parseFloat(document.getElementById('long-cda').value);
-  const latCda = parseFloat(document.getElementById('lat-cda').value);
+  const longCda = parseFloat(document.getElementById('long-cda').value)/1e6;
+  const latCda = parseFloat(document.getElementById('lat-cda').value)/1e6;
   const windSpeed = parseFloat(document.getElementById('wind-speed').value);
   const windSpeedHeight = parseFloat(document.getElementById('wind-speed-height').value);
   const windDirection = parseFloat(document.getElementById('wind-direction').value);
