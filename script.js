@@ -302,7 +302,7 @@ class TrajectoryCalculator {
     }
 
     if (relativeVelocity.z !== 0) {
-      dragForceZ = -(0.5 * arrow.latDragArea * airDensity) * Math.abs(relativeVelocity.z) * relativeVelocity.z;
+      dragForceZ = -(0.5 * arrow.longDragArea * airDensity) * Math.abs(relativeVelocity.z) * relativeVelocity.z;
     }
 
     const dragForce = new Vector3D(dragForceX, dragForceY, dragForceZ);
@@ -637,16 +637,16 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation > 45) {
     errors.push({ fieldId: 'launch-elevation', message: 'Launch angle must be between 0 and 45 degrees.' });
   }
-  if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0 || inputs.launchVelocity >= 500) {
+  if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0 || inputs.launchVelocity > 500) {
     errors.push({ fieldId: 'launch-velocity', message: 'Launch velocity must be greater than 0 and less than 500 ft/s.' });
   }
-  if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight <= 0 || inputs.initialHeight >= 10) {
+  if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight < 0 || inputs.initialHeight > 10) {
     errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 10 meters.' });
   }
   if (Number.isNaN(inputs.slopePercent) || inputs.slopePercent < -10 || inputs.slopePercent > 10) {
     errors.push({ fieldId: 'slope-percent', message: 'Slope must be between -10 and 10 percent.' });
   }
-  if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight <= 0 || inputs.arrowWeight >= 1000) {
+  if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight < 0 || inputs.arrowWeight > 1000) {
     errors.push({ fieldId: 'arrow-weight', message: 'Arrow weight must be greater than 0 and less than 1000 grains.' });
   }
   if (Number.isNaN(inputs.longCda) || inputs.longCda < 0) {
@@ -655,10 +655,10 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.latCda) || inputs.latCda < 0) {
     errors.push({ fieldId: 'lat-cda', message: 'Lateral CdA must be greater than 0.' });
   }
-  if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed < 0 || inputs.windSpeed >= 50) {
+  if (Number.isNaN(inputs.windSpeed) || inputs.windSpeed < 0 || inputs.windSpeed > 50) {
     errors.push({ fieldId: 'wind-speed', message: 'Wind speed must be greater than or equal to 0 and less than 50 mph.' });
   }
-  if (Number.isNaN(inputs.windSpeedHeight) || inputs.windSpeedHeight <= 0 || inputs.windSpeedHeight >= 50) {
+  if (Number.isNaN(inputs.windSpeedHeight) || inputs.windSpeedHeight <= 0 || inputs.windSpeedHeight > 50) {
     errors.push({ fieldId: 'wind-speed-height', message: 'Wind speed height must be greater than 0 and less than 50 meters.' });
   }
   if (Number.isNaN(inputs.windDirection) || inputs.windDirection < -180 || inputs.windDirection > 180) {
@@ -667,10 +667,10 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.hellmanConstant) || inputs.hellmanConstant < 0 || inputs.hellmanConstant > 0.7) {
     errors.push({ fieldId: 'hellman-constant', message: 'Hellman constant must be between 0 and 0.7.' });
   }
-  if (Number.isNaN(inputs.temperatureC) || inputs.temperatureC <= -40 || inputs.temperatureC >= 50) {
-    errors.push({ fieldId: 'temperature', message: 'Temperature must be greater than -40°C and less than 50°C.' });
+  if (Number.isNaN(inputs.temperatureC) || inputs.temperatureC < -50 || inputs.temperatureC > 100) {
+    errors.push({ fieldId: 'temperature', message: 'Temperature must be greater than -50°C and less than 100°C.' });
   }
-  if (Number.isNaN(inputs.pressure) || inputs.pressure <= 80 || inputs.pressure >= 120) {
+  if (Number.isNaN(inputs.pressure) || inputs.pressure < 80 || inputs.pressure > 120) {
     errors.push({ fieldId: 'pressure', message: 'Pressure must be greater than 80 kPa and less than 120 kPa.' });
   }
   if (Number.isNaN(inputs.humidity) || inputs.humidity < 0 || inputs.humidity > 100) {
