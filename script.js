@@ -274,26 +274,6 @@ class Arrow {
   }
 }
 
-class BowSpeeds {
-  constructor(speed0Turns, speed2Turns, speed4Turns) {
-    this.speed0Turns = speed0Turns;
-    this.speed2Turns = speed2Turns;
-    this.speed4Turns = speed4Turns;
-  }
-
-  calculateSpeedFps(noTurns) {
-    const y0 = this.speed0Turns;
-    const y2 = this.speed2Turns;
-    const y4 = this.speed4Turns;
-
-    const c = y0;
-    const a = (y4 - 2 * y2 + y0) / 8;
-    const b = (y2 - y0 - 4 * a) / 2;
-
-    return a * noTurns * noTurns + b * noTurns + c;
-  }
-}
-
 class TrajectoryCalculator {
   constructor() {
     // Placeholder for future trajectory-specific options
@@ -438,7 +418,8 @@ class TrajectoryCalculator {
     // Linear interpolation for impact position
     const impactX = previousPosition.x + f * (currentPosition.x - previousPosition.x);
     const impactY = previousPosition.y + f * (currentPosition.y - previousPosition.y);
-    const impactPosition = new Vector3D(impactX, impactY, 0);
+    const impactZ = previousPosition.z + f * (currentPosition.z - previousPosition.z);
+    const impactPosition = new Vector3D(impactX, impactY, impactZ);
 
     // Linear interpolation for impact velocity
     const impactVx = previousVelocity.x + f * (currentVelocity.x - previousVelocity.x);
@@ -518,12 +499,9 @@ function setFieldValidity(fieldIds, invalid) {
 function displayValidationErrors(errors) {
   const fieldIds = [
     'launch-elevation',
-    'bow-turns',
+    'launch-velocity',
     'initial-height',
     'slope-percent',
-    'speed-0-turns',
-    'speed-2-turns',
-    'speed-4-turns',
     'arrow-weight',
     'long-cda',
     'lat-cda',
@@ -571,13 +549,9 @@ function overrideInputsFromQuery() {
   const params = new URLSearchParams(window.location.search);
   const overrideMap = {
     launchElevation: 'launch-elevation',
-    bowTurns: 'bow-turns',
     launchVelocity: 'launch-velocity',
     initialHeight: 'initial-height',
     slopePercent: 'slope-percent',
-    speed0Turns: 'speed-0-turns',
-    speed2Turns: 'speed-2-turns',
-    speed4Turns: 'speed-4-turns',
     arrowWeight: 'arrow-weight',
     longCda: 'long-cda',
     latCda: 'lat-cda',
@@ -600,6 +574,10 @@ function overrideInputsFromQuery() {
       continue;
     }
 
+    if (input.readonly) {
+      continue;
+    }
+
     const paramValue = params.get(paramName);
     if (paramValue === null) {
       continue;
@@ -614,6 +592,8 @@ function overrideInputsFromQuery() {
     } else {
       input.value = paramValue;
     }
+
+    input.removeAttribute('readonly');
   }
 }
 
@@ -632,6 +612,9 @@ function reloadWithQueryParams() {
       return;
     }
     if (element.type === 'button' || element.type === 'submit' || element.type === 'reset') {
+      return;
+    }
+    if (element.readonly) {
       return;
     }
     params.set(element.name, element.value);
@@ -654,23 +637,14 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation > 45) {
     errors.push({ fieldId: 'launch-elevation', message: 'Launch angle must be between 0 and 45 degrees.' });
   }
-  if (Number.isNaN(inputs.bowTurns) || inputs.bowTurns < 0 || inputs.bowTurns > 8) {
-    errors.push({ fieldId: 'bow-turns', message: 'Bow turns must be between 0 and 8.' });
+  if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0 || inputs.launchVelocity >= 500) {
+    errors.push({ fieldId: 'launch-velocity', message: 'Launch velocity must be greater than 0 and less than 500 ft/s.' });
   }
   if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight <= 0 || inputs.initialHeight >= 10) {
     errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 10 meters.' });
   }
   if (Number.isNaN(inputs.slopePercent) || inputs.slopePercent < -10 || inputs.slopePercent > 10) {
     errors.push({ fieldId: 'slope-percent', message: 'Slope must be between -10 and 10 percent.' });
-  }
-  if (Number.isNaN(inputs.speed0Turns) || inputs.speed0Turns <= 0) {
-    errors.push({ fieldId: 'speed-0-turns', message: 'Speed @0 Turns must be greater than 0.' });
-  }
-  if (Number.isNaN(inputs.speed2Turns) || inputs.speed2Turns <= 0) {
-    errors.push({ fieldId: 'speed-2-turns', message: 'Speed @2 Turns must be greater than 0.' });
-  }
-  if (Number.isNaN(inputs.speed4Turns) || inputs.speed4Turns <= 0) {
-    errors.push({ fieldId: 'speed-4-turns', message: 'Speed @4 Turns must be greater than 0.' });
   }
   if (Number.isNaN(inputs.arrowWeight) || inputs.arrowWeight <= 0 || inputs.arrowWeight >= 1000) {
     errors.push({ fieldId: 'arrow-weight', message: 'Arrow weight must be greater than 0 and less than 1000 grains.' });
@@ -708,12 +682,9 @@ function validateInputs(inputs) {
 
 function calculateTrajectory() {
   const launchElevation = parseFloat(document.getElementById('launch-elevation').value);
-  const bowTurns = parseFloat(document.getElementById('bow-turns').value);
+  const launchVelocity = parseFloat(document.getElementById('launch-velocity').value);
   const initialHeight = parseFloat(document.getElementById('initial-height').value);
   const slopePercent = parseFloat(document.getElementById('slope-percent').value);
-  const speed0Turns = parseFloat(document.getElementById('speed-0-turns').value);
-  const speed2Turns = parseFloat(document.getElementById('speed-2-turns').value);
-  const speed4Turns = parseFloat(document.getElementById('speed-4-turns').value);
   const arrowWeight = parseFloat(document.getElementById('arrow-weight').value);
   const longCda = parseFloat(document.getElementById('long-cda').value);
   const latCda = parseFloat(document.getElementById('lat-cda').value);
@@ -725,8 +696,6 @@ function calculateTrajectory() {
   const pressure = parseFloat(document.getElementById('pressure').value);
   const humidity = parseFloat(document.getElementById('humidity').value);
 
-  const bowSpeeds = new BowSpeeds(speed0Turns, speed2Turns, speed4Turns);
-  const launchVelocity = bowSpeeds.calculateSpeedFps(bowTurns);
   const launchVelocityMps = UnitConverter.convertSpeed(launchVelocity, 'ft/s', 'm/s');
   const launchVelocityInput = document.getElementById('launch-velocity');
   if (launchVelocityInput) {
@@ -737,12 +706,8 @@ function calculateTrajectory() {
   const inputs = {
     launchElevation,
     launchVelocity,
-    bowTurns,
     initialHeight,
     slopePercent,
-    speed0Turns,
-    speed2Turns,
-    speed4Turns,
     arrowWeight,
     longCda,
     latCda,
@@ -791,6 +756,7 @@ function calculateTrajectory() {
 
   document.getElementById('impact-distance-m').value = result.impactX.toFixed(2);
   document.getElementById('impact-distance-yd').value = UnitConverter.convertLength(result.impactX, 'm', 'yd').toFixed(2);
+  document.getElementById('impact-height').value = result.impactZ.toFixed(2);
   document.getElementById('max-height').value = result.maxZ.toFixed(2);
   document.getElementById('flight-time').value = result.totalFlightTime.toFixed(2);
   document.getElementById('lateral-drift').value = result.impactY.toFixed(2);

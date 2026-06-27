@@ -18,15 +18,13 @@
         <label for="launch-elevation">Launch Elevation (degrees)<input type="number" id="launch-elevation"
             name="launchElevation" step="0.5" min="0" max="45" value="18" aria-describedby="launch-elevation-helper"></label>
         <small id="launch-elevation-helper" class="field-helper" aria-live="polite"></small>
-        <label for="bow-turns">Bow Turns<input type="number" id="bow-turns" name="bowTurns" step="1" min="0" max="8" value="3" aria-describedby="bow-turns-helper"></label>
-        <small id="bow-turns-helper" class="field-helper" aria-live="polite"></small>
         <label for="launch-velocity">Launch Velocity (fps)<input type="number" id="launch-velocity"
-            name="launchVelocity" value="" readonly></label>
+            name="launchVelocity" value="195"></label>
         <label for="initial-height">Initial Height (m)<input type="number" id="initial-height" name="initialHeight"
-            step="0.01" min="0" max="10" value="1.4" aria-describedby="initial-height-helper"></label>
+            step="0.01" min="0" max="10" value="1.5" aria-describedby="initial-height-helper"></label>
         <small id="initial-height-helper" class="field-helper" aria-live="polite"></small>
         <label for="slope-percent">Slope %<input type="number" id="slope-percent" name="slopePercent"
-            step="0.05" min="-10" max="10" value="0" aria-describedby="slope-percent-helper"></label>
+            step="0.05" min="-2" max="2" value="0.00" aria-describedby="slope-percent-helper"></label>
         <small id="slope-percent-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
@@ -35,24 +33,14 @@
             name="impactDistanceM" step="0.01" readonly></label>
         <label for="impact-distance-yd">Impact Distance (yd)<input type="number" id="impact-distance-yd"
             name="impactDistanceYd" step="0.01" readonly></label>
+        <label for="impact-height">Impact Height (m)<input type="number" id="impact-height" name="impactHeight" step="0.01"
+            readonly></label>
         <label for="max-height">Max Height (m)<input type="number" id="max-height" name="maxHeight" step="0.01"
             readonly></label>
         <label for="flight-time">Flight Time (s)<input type="number" id="flight-time" name="flightTime" step="0.01"
             readonly></label>
         <label for="lateral-drift">Lateral Drift (m)<input type="number" id="lateral-drift" name="lateralDrift"
             step="0.01" readonly></label>
-      </fieldset>
-      <fieldset>
-        <h2>Bow Speeds</h2>
-        <label for="speed-0-turns">Speed @0 Turns (fps)<input type="number" id="speed-0-turns" name="speed0Turns" step="1"
-            min="1" max="1000" value="200" aria-describedby="speed-0-turns-helper"></label>
-        <small id="speed-0-turns-helper" class="field-helper" aria-live="polite"></small>
-        <label for="speed-2-turns">Speed @2 Turns (fps)<input type="number" id="speed-2-turns" name="speed2Turns" step="1"
-            min="1" max="1000" value="192" aria-describedby="speed-2-turns-helper"></label>
-        <small id="speed-2-turns-helper" class="field-helper" aria-live="polite"></small>
-        <label for="speed-4-turns">Speed @4 Turns (fps)<input type="number" id="speed-4-turns" name="speed4Turns" step="1"
-            min="1" max="1000" value="180" aria-describedby="speed-4-turns-helper"></label>
-        <small id="speed-4-turns-helper" class="field-helper" aria-live="polite"></small>
       </fieldset>
       <fieldset>
         <h2>Arrow</h2>
@@ -90,7 +78,7 @@
             max="120" value="101.325" aria-describedby="pressure-helper"></label>
         <small id="pressure-helper" class="field-helper" aria-live="polite"></small>
         <label for="humidity">Humidity (%)<input type="number" id="humidity" name="humidity" step="1" min="0" max="100"
-            value="50" aria-describedby="humidity-helper"></label>
+            value="70" aria-describedby="humidity-helper"></label>
         <small id="humidity-helper" class="field-helper" aria-live="polite"></small>
         <label for="air-density">Air Density (kg/m<sup>3</sup>)<input type="number" id="air-density" name="airDensity"
             step="0.005" min="1.0" max="1.3" readonly></label>
