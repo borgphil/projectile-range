@@ -634,8 +634,8 @@ window.addEventListener('DOMContentLoaded', initializeFieldHelpers);
 function validateInputs(inputs) {
   const errors = [];
 
-  if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation > 45) {
-    errors.push({ fieldId: 'launch-elevation', message: 'Launch angle must be between 0 and 45 degrees.' });
+  if (Number.isNaN(inputs.launchElevation) || inputs.launchElevation < 0 || inputs.launchElevation >= 90) {
+    errors.push({ fieldId: 'launch-elevation', message: 'Launch angle must be between 0 and 90 degrees.' });
   }
   if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0 || inputs.launchVelocity > 500) {
     errors.push({ fieldId: 'launch-velocity', message: 'Launch velocity must be greater than 0 and less than 500 ft/s.' });
@@ -746,7 +746,7 @@ function calculateTrajectory() {
     wind,
     atmosphere.airDensity,
     0.01,
-    10
+    30
   );
 
   if (!result || Number.isNaN(result.impactX) || Number.isNaN(result.impactY) || Number.isNaN(result.maxZ) || Number.isNaN(result.totalFlightTime)) {
