@@ -15,13 +15,13 @@
     <form onchange="reloadWithQueryParams()" class="grid">
       <fieldset>
         <h2>Launch</h2>
-        <label for="launch-elevation">Launch Elevation (degrees)<input type="number" id="launch-elevation"
+        <label for="launch-elevation">Launch Elevation (<sup>o</sup>)<input type="number" id="launch-elevation"
             name="launchElevation" step="0.5" min="0" max="90" value="16" aria-describedby="launch-elevation-helper"></label>
         <small id="launch-elevation-helper" class="field-helper" aria-live="polite"></small>
         <label for="launch-velocity">Launch Velocity (fps)<input type="number" id="launch-velocity"
             name="launchVelocity" value="205"></label>
         <label for="initial-height">Initial Height (m)<input type="number" id="initial-height" name="initialHeight"
-            step="0.01" min="0" max="10" value="1.5" aria-describedby="initial-height-helper"></label>
+            step="0.1" min="0" max="200" value="1.5" aria-describedby="initial-height-helper"></label>
         <small id="initial-height-helper" class="field-helper" aria-live="polite"></small>
         <label for="slope-percent">Slope %<input type="number" id="slope-percent" name="slopePercent"
             step="0.05" min="-2" max="2" value="0.00" aria-describedby="slope-percent-helper"></label>
@@ -62,8 +62,8 @@
         <label for="wind-speed-height">Wind Speed Height (m)<input type="number" id="wind-speed-height"
             name="windSpeedHeight" step="1" min="1" max="50" value="10" aria-describedby="wind-speed-height-helper"></label>
         <small id="wind-speed-height-helper" class="field-helper" aria-live="polite"></small>
-        <label for="wind-direction">Wind Direction (degrees)<input type="number" id="wind-direction"
-            name="windDirection" step="10" min="-180" max="180" value="0" aria-describedby="wind-direction-helper"></label>
+        <label for="wind-direction">Wind Direction (<sup>o</sup>)<input type="number" id="wind-direction"
+            name="windDirection" step="10" min="0" max="360" value="0" aria-describedby="wind-direction-helper"></label>
         <small id="wind-direction-helper" class="field-helper" aria-live="polite"></small>
         <label for="hellman-constant">Hellman Constant<input type="number" id="hellman-constant" name="hellmanConstant"
             step="0.05" min="0" max="0.7" value="0.15" aria-describedby="hellman-constant-helper"></label>

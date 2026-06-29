@@ -640,8 +640,8 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.launchVelocity) || inputs.launchVelocity <= 0 || inputs.launchVelocity > 500) {
     errors.push({ fieldId: 'launch-velocity', message: 'Launch velocity must be greater than 0 and less than 500 ft/s.' });
   }
-  if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight < 0 || inputs.initialHeight > 10) {
-    errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 10 meters.' });
+  if (Number.isNaN(inputs.initialHeight) || inputs.initialHeight < 0 || inputs.initialHeight > 200) {
+    errors.push({ fieldId: 'initial-height', message: 'Initial height must be greater than 0 and less than 200 meters.' });
   }
   if (Number.isNaN(inputs.slopePercent) || inputs.slopePercent < -10 || inputs.slopePercent > 10) {
     errors.push({ fieldId: 'slope-percent', message: 'Slope must be between -10 and 10 percent.' });
@@ -661,8 +661,8 @@ function validateInputs(inputs) {
   if (Number.isNaN(inputs.windSpeedHeight) || inputs.windSpeedHeight <= 0 || inputs.windSpeedHeight > 50) {
     errors.push({ fieldId: 'wind-speed-height', message: 'Wind speed height must be greater than 0 and less than 50 meters.' });
   }
-  if (Number.isNaN(inputs.windDirection) || inputs.windDirection < -180 || inputs.windDirection > 180) {
-    errors.push({ fieldId: 'wind-direction', message: 'Wind direction must be between -180 and 180 degrees.' });
+  if (Number.isNaN(inputs.windDirection) || inputs.windDirection < 0 || inputs.windDirection > 360) {
+    errors.push({ fieldId: 'wind-direction', message: 'Wind direction must be between 0 and 360 degrees.' });
   }
   if (Number.isNaN(inputs.hellmanConstant) || inputs.hellmanConstant < 0 || inputs.hellmanConstant > 0.7) {
     errors.push({ fieldId: 'hellman-constant', message: 'Hellman constant must be between 0 and 0.7.' });
