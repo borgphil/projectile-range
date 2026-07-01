@@ -31,29 +31,61 @@
     </nav>
 
     <main class="container">
-        <form onchange="reloadWithQueryParams()" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5">
+        <form onchange="reloadWithQueryParams()" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 g-3">
             <div class="col">
                 <section class="card">
                     <div class="card-body">
-                        <h2 class="h4">Launch</h2>
-                        <div>
-                            <label for="launch-elevation" class="form-label">Launch Elevation (°)</label>
-                            <input type="number" class="form-control" id="launch-elevation" name="launchElevation" step="0.1" min="0" max="90" value="18" aria-describedby="launch-elevation-helper">
-                            <div id="launch-elevation-helper" class="form-text" aria-live="polite"></div>
+                        <h3>Launch</h3>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="launch-elevation" name="launchElevation" step="0.1" min="0" max="90" value="18" placeholder="Launch Elevation (°)" aria-describedby="launch-elevation-helper">
+                            <label for="launch-elevation">Launch Elevation (°)</label>
                         </div>
-                        <div>
-                            <label for="launch-velocity" class="form-label">Launch Velocity (fps)</label>
-                            <input type="number" class="form-control" id="launch-velocity" name="launchVelocity" value="200">
+                        <div id="launch-elevation-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="launch-velocity" name="launchVelocity" value="200" placeholder="Launch Velocity (fps)">
+                            <label for="launch-velocity">Launch Velocity (fps)</label>
                         </div>
-                        <div>
-                            <label for="initial-height" class="form-label">Initial Height (m)</label>
-                            <input type="number" class="form-control" id="initial-height" name="initialHeight" step="0.1" min="0" max="200" value="1.4" aria-describedby="initial-height-helper">
-                            <div id="initial-height-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="initial-height" name="initialHeight" step="0.1" min="0" max="200" value="1.4" placeholder="Initial Height (m)" aria-describedby="initial-height-helper">
+                            <label for="initial-height">Initial Height (m)</label>
                         </div>
-                        <div>
-                            <label for="slope-percent" class="form-label">Slope %</label>
-                            <input type="number" class="form-control" id="slope-percent" name="slopePercent" step="0.05" min="-2" max="2" value="0.00" aria-describedby="slope-percent-helper">
-                            <div id="slope-percent-helper" class="form-text" aria-live="polite"></div>
+                        <div id="initial-height-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="slope-percent" name="slopePercent" step="0.05" min="-2" max="2" value="0.00" placeholder="Slope %" aria-describedby="slope-percent-helper">
+                            <label for="slope-percent">Slope %</label>
+                        </div>
+                        <div id="slope-percent-helper" class="form-text" aria-live="polite"></div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col">
+                <section class="card">
+                    <div class="card-body">
+                        <h3>Results</h3>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="impact-distance-m" name="impactDistanceM" step="0.01" placeholder="Impact Distance (m)" readonly>
+                            <label for="impact-distance-m">Impact Distance (m)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="impact-distance-yd" name="impactDistanceYd" step="0.01" placeholder="Impact Distance (yd)" readonly>
+                            <label for="impact-distance-yd">Impact Distance (yd)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="impact-height" name="impactHeight" step="0.01" placeholder="Impact Height (m)" readonly>
+                            <label for="impact-height">Impact Height (m)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="max-height" name="maxHeight" step="0.01" placeholder="Max Height (m)" readonly>
+                            <label for="max-height">Max Height (m)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="flight-time" name="flightTime" step="0.01" placeholder="Flight Time (s)" readonly>
+                            <label for="flight-time">Flight Time (s)</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="lateral-drift" name="lateralDrift" step="0.01" placeholder="Lateral Drift (m)" readonly>
+                            <label for="lateral-drift">Lateral Drift (m)</label>
                         </div>
                     </div>
                 </section>
@@ -62,31 +94,22 @@
             <div class="col">
                 <section class="card">
                     <div class="card-body">
-                        <h2 class="h4">Results</h2>
-                        <div>
-                            <label for="impact-distance-m" class="form-label">Impact Distance (m)</label>
-                            <input type="number" class="form-control" id="impact-distance-m" name="impactDistanceM" step="0.01" readonly>
+                        <h3>Arrow</h3>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="arrow-weight" name="arrowWeight" step="1" min="1" max="1000" value="632" placeholder="Weight (grains)" aria-describedby="arrow-weight-helper">
+                            <label for="arrow-weight">Weight (grains)</label>
                         </div>
-                        <div>
-                            <label for="impact-distance-yd" class="form-label">Impact Distance (yd)</label>
-                            <input type="number" class="form-control" id="impact-distance-yd" name="impactDistanceYd" step="0.01" readonly>
+                        <div id="arrow-weight-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="long-cda" name="longCda" step="1" min="0" value="120" placeholder="Long. CdA (mm²)" aria-describedby="long-cda-helper">
+                            <label for="long-cda">Long. CdA (mm²)</label>
                         </div>
-                        <div>
-                            <label for="impact-height" class="form-label">Impact Height (m)</label>
-                            <input type="number" class="form-control" id="impact-height" name="impactHeight" step="0.01" readonly>
+                        <div id="long-cda-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating">
+                            <input type="number" class="form-control" id="lat-cda" name="latCda" step="10" min="0" value="6500" placeholder="Lat. CdA (mm²)" aria-describedby="lat-cda-helper">
+                            <label for="lat-cda">Lat. CdA (mm²)</label>
                         </div>
-                        <div>
-                            <label for="max-height" class="form-label">Max Height (m)</label>
-                            <input type="number" class="form-control" id="max-height" name="maxHeight" step="0.01" readonly>
-                        </div>
-                        <div>
-                            <label for="flight-time" class="form-label">Flight Time (s)</label>
-                            <input type="number" class="form-control" id="flight-time" name="flightTime" step="0.01" readonly>
-                        </div>
-                        <div>
-                            <label for="lateral-drift" class="form-label">Lateral Drift (m)</label>
-                            <input type="number" class="form-control" id="lateral-drift" name="lateralDrift" step="0.01" readonly>
-                        </div>
+                        <div id="lat-cda-helper" class="form-text" aria-live="polite"></div>
                     </div>
                 </section>
             </div>
@@ -94,22 +117,27 @@
             <div class="col">
                 <section class="card">
                     <div class="card-body">
-                        <h2 class="h4">Arrow</h2>
-                        <div>
-                            <label for="arrow-weight" class="form-label">Weight (grains)</label>
-                            <input type="number" class="form-control" id="arrow-weight" name="arrowWeight" step="1" min="1" max="1000" value="632" aria-describedby="arrow-weight-helper">
-                            <div id="arrow-weight-helper" class="form-text" aria-live="polite"></div>
+                        <h2>Wind</h2>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="wind-speed" name="windSpeed" step="1" min="0" max="30" value="0" placeholder="Wind Speed (mph)" aria-describedby="wind-speed-helper">
+                            <label for="wind-speed">Wind Speed (mph)</label>
                         </div>
-                        <div>
-                            <label for="long-cda" class="form-label">Long. CdA (mm²)</label>
-                            <input type="number" class="form-control" id="long-cda" name="longCda" step="1" min="0" value="120" aria-describedby="long-cda-helper">
-                            <div id="long-cda-helper" class="form-text" aria-live="polite"></div>
+                        <div id="wind-speed-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="wind-speed-height" name="windSpeedHeight" step="1" min="1" max="50" value="10" placeholder="Wind Ref. Height (m)" aria-describedby="wind-speed-height-helper">
+                            <label for="wind-speed-height">Wind Ref. Height (m)</label>
                         </div>
-                        <div>
-                            <label for="lat-cda" class="form-label">Lat. CdA (mm²)</label>
-                            <input type="number" class="form-control" id="lat-cda" name="latCda" step="10" min="0" value="6500" aria-describedby="lat-cda-helper">
-                            <div id="lat-cda-helper" class="form-text" aria-live="polite"></div>
+                        <div id="wind-speed-height-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="wind-direction" name="windDirection" step="10" min="0" max="360" value="0" placeholder="Wind Direction (°)" aria-describedby="wind-direction-helper">
+                            <label for="wind-direction">Wind Direction (°)</label>
                         </div>
+                        <div id="wind-direction-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="hellman-constant" name="hellmanConstant" step="0.05" min="0" max="0.7" value="0.15" placeholder="Hellman Constant" aria-describedby="hellman-constant-helper">
+                            <label for="hellman-constant">Hellman Constant</label>
+                        </div>
+                        <div id="hellman-constant-helper" class="form-text" aria-live="polite"></div>
                     </div>
                 </section>
             </div>
@@ -117,53 +145,25 @@
             <div class="col">
                 <section class="card">
                     <div class="card-body">
-                        <h2 class="h4">Wind</h2>
-                        <div>
-                            <label for="wind-speed" class="form-label">Wind Speed (mph)</label>
-                            <input type="number" class="form-control" id="wind-speed" name="windSpeed" step="1" min="0" max="30" value="0" aria-describedby="wind-speed-helper">
-                            <div id="wind-speed-helper" class="form-text" aria-live="polite"></div>
+                        <h2>Atmosphere</h2>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="temperature" name="temperature" step="1" min="-40" max="50" value="20" placeholder="Temperature (°C)" aria-describedby="temperature-helper">
+                            <label for="temperature">Temperature (°C)</label>
                         </div>
-                        <div>
-                            <label for="wind-speed-height" class="form-label">Wind Ref. Height (m)</label>
-                            <input type="number" class="form-control" id="wind-speed-height" name="windSpeedHeight" step="1" min="1" max="50" value="10" aria-describedby="wind-speed-height-helper">
-                            <div id="wind-speed-height-helper" class="form-text" aria-live="polite"></div>
+                        <div id="temperature-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="pressure" name="pressure" step="1" min="80" max="120" value="101.325" placeholder="Pressure (kPa)" aria-describedby="pressure-helper">
+                            <label for="pressure">Pressure (kPa)</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="wind-direction" class="form-label">Wind Direction (°)</label>
-                            <input type="number" class="form-control" id="wind-direction" name="windDirection" step="10" min="0" max="360" value="0" aria-describedby="wind-direction-helper">
-                            <div id="wind-direction-helper" class="form-text" aria-live="polite"></div>
+                        <div id="pressure-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="humidity" name="humidity" step="1" min="0" max="100" value="70" placeholder="Humidity (%)" aria-describedby="humidity-helper">
+                            <label for="humidity">Humidity (%)</label>
                         </div>
-                        <div>
-                            <label for="hellman-constant" class="form-label">Hellman Constant</label>
-                            <input type="number" class="form-control" id="hellman-constant" name="hellmanConstant" step="0.05" min="0" max="0.7" value="0.15" aria-describedby="hellman-constant-helper">
-                            <div id="hellman-constant-helper" class="form-text" aria-live="polite"></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <div class="col">
-                <section class="card">
-                    <div class="card-body">
-                        <h2 class="h4">Atmosphere</h2>
-                        <div>
-                            <label for="temperature" class="form-label">Temperature (°C)</label>
-                            <input type="number" class="form-control" id="temperature" name="temperature" step="1" min="-40" max="50" value="20" aria-describedby="temperature-helper">
-                            <div id="temperature-helper" class="form-text" aria-live="polite"></div>
-                        </div>
-                        <div>
-                            <label for="pressure" class="form-label">Pressure (kPa)</label>
-                            <input type="number" class="form-control" id="pressure" name="pressure" step="1" min="80" max="120" value="101.325" aria-describedby="pressure-helper">
-                            <div id="pressure-helper" class="form-text" aria-live="polite"></div>
-                        </div>
-                        <div>
-                            <label for="humidity" class="form-label">Humidity (%)</label>
-                            <input type="number" class="form-control" id="humidity" name="humidity" step="1" min="0" max="100" value="70" aria-describedby="humidity-helper">
-                            <div id="humidity-helper" class="form-text" aria-live="polite"></div>
-                        </div>
-                        <div>
-                            <label for="air-density" class="form-label">Air Density (kg/m³)</label>
-                            <input type="number" class="form-control" id="air-density" name="airDensity" step="0.005" min="1.0" max="1.3" readonly>
+                        <div id="humidity-helper" class="form-text" aria-live="polite"></div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="air-density" name="airDensity" step="0.005" min="1.0" max="1.3" placeholder="Air Density (kg/m³)" readonly>
+                            <label for="air-density">Air Density (kg/m³)</label>
                         </div>
                     </div>
                 </section>
@@ -180,24 +180,24 @@
                 </div>
                 <div class="modal-body">
                     <form id="goalSeekForm" novalidate>
-                        <div class="mb-3">
-                            <label for="goal-seek-set" class="form-label">Set</label>
-                            <select class="form-select" id="goal-seek-set" name="goalSeekSet">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="goal-seek-set" name="goalSeekSet" placeholder="Set">
                                 <option value="impact-distance-m">Impact Distance (m)</option>
                                 <option value="impact-distance-yd">Impact Distance (yd)</option>
                             </select>
+                            <label for="goal-seek-set">Set</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="goal-seek-target" class="form-label">To value</label>
-                            <input type="number" class="form-control" id="goal-seek-target" name="goalSeekTarget" step="0.01" inputmode="decimal" value="185">
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="goal-seek-target" name="goalSeekTarget" step="0.01" inputmode="decimal" value="185" placeholder="To value">
+                            <label for="goal-seek-target">To value</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="goal-seek-change" class="form-label">By changing</label>
-                            <select class="form-select" id="goal-seek-change" name="goalSeekChange">
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="goal-seek-change" name="goalSeekChange" placeholder="By changing">
                                 <option value="launch-elevation">Launch Elevation</option>
                                 <option value="launch-velocity">Launch Velocity</option>
                                 <option value="long-cda">Long. CdA</option>
                             </select>
+                            <label for="goal-seek-change">By changing</label>
                         </div>
                     </form>
                 </div>

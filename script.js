@@ -861,7 +861,7 @@ function calculateTrajectory() {
   );
 
   if (!result || Number.isNaN(result.impactX) || Number.isNaN(result.impactY) || Number.isNaN(result.maxZ) || Number.isNaN(result.totalFlightTime)) {
-    console.error('Trajectory calculation returned invalid results', result);
+    window.alert('Trajectory calculation returned invalid results', result);
     return;
   }
 
