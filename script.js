@@ -743,9 +743,43 @@ function initializeGoalSeekModal() {
   }
 }
 
+function simulateScore() {
+  const accuracy = parseFloat(document.getElementById('archer-accuracy').value);
+  const windGust = parseFloat(document.getElementById('wind-gust').value);
+  const shots = parseFloat(document.getElementById('shots').value);
+  const scoreType = document.getElementById('score-type').value;
+  const resultInput = document.getElementById('score-simulator-result');
+
+  if ([accuracy, windGust, shots].some((value) => Number.isNaN(value))) {
+    if (resultInput) {
+      resultInput.value = 'Enter valid values';
+    }
+    return;
+  }
+
+
+  const score = simulateScoreCalc(accuracy, windGust, shots, scoreType);
+
+  if (resultInput) {
+    resultInput.value = `${score.toLocaleString()} pts`;
+  }
+}
+
+function simulateScoreCalc(accuracy, windGust, shots, scoreType) {
+   return 200 + 10*Math.random();
+}
+
+function initializeScoreSimulatorModal() {
+  const submitButton = document.getElementById('score-simulate-submit');
+  if (submitButton) {
+    submitButton.addEventListener('click', simulateScore);
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initializeFieldHelpers();
   initializeGoalSeekModal();
+  initializeScoreSimulatorModal();
 });
 
 function validateInputs(inputs) {

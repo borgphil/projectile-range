@@ -23,7 +23,10 @@
                         <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#goalSeekModal">Goal Seek</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link active" href="#" data-bs-toggle="modal" data-bs-target="#scoreSimulatorModal">Score Simulator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">About</a>
                     </li>
                 </ul>
             </div>
@@ -209,6 +212,48 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="goal-seek-submit">Goal Seek</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="scoreSimulatorModal" tabindex="-1" aria-labelledby="scoreSimulatorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scoreSimulatorModalLabel">Score Simulator</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scoreSimulatorForm" novalidate>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="archer-accuracy" name="archerAccuracy" step="0.01" min="0" max="5" value="0.20" placeholder="Archer Accuracy (degrees)">
+                            <label for="archer-accuracy">Archer Accuracy (degrees)</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="wind-gust" name="windGust" step="1" min="0" max="100" value="30" placeholder="Wind Gust (%)">
+                            <label for="wind-gust">Wind Gust (%)</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="shots" name="shots" step="1" min="1" max="1000" value="72" placeholder="Shots">
+                            <label for="shots">Shots</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="score-type" name="scoreType" placeholder="Score Type">
+                                <option value="Imperial">Imperial</option>
+                                <option value="Metric">Metric</option>
+                            </select>
+                            <label for="score-type">Score Type</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="score-simulator-result" name="scoreSimulatorResult" placeholder="Simulated Score" readonly>
+                            <label for="score-simulator-result">Simulated Score</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="score-simulate-submit">Simulate</button>
                 </div>
             </div>
         </div>
