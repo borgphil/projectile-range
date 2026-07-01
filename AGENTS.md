@@ -8,7 +8,7 @@ This repository is a small static web project with a single-page HTML app and su
 - Files to edit:
   - `index.html` — main HTML structure
   - `script.js` — interactive logic and application behavior
-  - `styles.css` — custom styling, currently minimal and based on Pico styling
+  - `styles.css` — custom styling, currently minimal and based on Bootstrap 5 styling
 - Use plain vanilla HTML/CSS/JavaScript unless the user explicitly asks for a framework.
 - Keep changes lightweight and avoid adding unnecessary dependencies.
 
