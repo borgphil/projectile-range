@@ -519,6 +519,10 @@ function displayValidationErrors(errors) {
     const helper = document.getElementById(`${fieldId}-helper`);
     if (input) {
       input.setAttribute('aria-invalid', 'false');
+      input.classList.remove('is-invalid', 'is-valid');
+      if (!input.readOnly) {
+        input.classList.add('is-valid');
+      }
     }
     if (helper) {
       helper.textContent = '';
@@ -536,6 +540,8 @@ function displayValidationErrors(errors) {
 
     if (input) {
       input.setAttribute('aria-invalid', 'true');
+      input.classList.remove('is-valid');
+      input.classList.add('is-invalid');
     }
     if (helper) {
       helper.textContent = error.message;
@@ -868,6 +874,7 @@ function calculateTrajectory() {
   document.getElementById('impact-distance-m').value = result.impactX.toFixed(2);
   document.getElementById('impact-distance-yd').value = UnitConverter.convertLength(result.impactX, 'm', 'yd').toFixed(2);
   document.getElementById('impact-height').value = result.impactZ.toFixed(2);
+  document.getElementById('impact-angle').value = result.impactAngle.toFixed(2);
   document.getElementById('max-height').value = result.maxZ.toFixed(2);
   document.getElementById('flight-time').value = result.totalFlightTime.toFixed(2);
   document.getElementById('lateral-drift').value = result.impactY.toFixed(2);
